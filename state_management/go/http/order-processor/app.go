@@ -22,7 +22,7 @@ func main() {
 		DAPR_HTTP_PORT = "3500"
 	}
 
-	DAPR_STATE_STORE := "statestore"
+	DAPR_STATE_STORE := "elrond-blockchain"
 	for i := 1; i <= 10; i++ {
 		orderId := i
 		order := "{\"orderId\":" + strconv.Itoa(orderId) + "}"
@@ -34,6 +34,13 @@ func main() {
 		// Save state into a state store
 		_, _ = http.Post(DAPR_HOST+":"+DAPR_HTTP_PORT+"/v1.0/state/"+DAPR_STATE_STORE, "application/json", responseBody)
 		log.Println("Saving Order: " + order)
+	}
+
+	time.Sleep(7 * time.Second)
+
+	for i := 1; i <= 10; i++ {
+		orderId := i
+		order := "{\"orderId\":" + strconv.Itoa(orderId) + "}"
 
 		// Get state from a state store
 		getResponse, err := http.Get(DAPR_HOST + ":" + DAPR_HTTP_PORT + "/v1.0/state/" + DAPR_STATE_STORE + "/" + strconv.Itoa(orderId))
@@ -50,6 +57,21 @@ func main() {
 		_, _ = client.Do(req)
 		log.Println("Deleting Order: " + order)
 
-		time.Sleep(5000)
+	}
+
+	time.Sleep(7 * time.Second)
+
+	for i := 1; i <= 10; i++ {
+		orderId := i
+
+		// Get state from a state store
+		getResponse, err := http.Get(DAPR_HOST + ":" + DAPR_HTTP_PORT + "/v1.0/state/" + DAPR_STATE_STORE + "/" + strconv.Itoa(orderId))
+		if err != nil {
+			fmt.Print(err.Error())
+			os.Exit(1)
+		}
+		result, _ := ioutil.ReadAll(getResponse.Body)
+		fmt.Println("Getting Order: ", string(result))
+
 	}
 }

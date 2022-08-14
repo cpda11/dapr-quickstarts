@@ -15,7 +15,7 @@ func main() {
 		orderId := i
 		order := "{\"orderId\":" + strconv.Itoa(orderId) + "}"
 		client, err := dapr.NewClient()
-		STATE_STORE_NAME := "statestore"
+		STATE_STORE_NAME := "elrond-blockchain"
 		if err != nil {
 			panic(err)
 		}
